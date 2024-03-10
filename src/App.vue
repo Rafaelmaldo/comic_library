@@ -1,26 +1,44 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div
+    class="flex min-h-screen gap-5 w-max"
+  >
+    <ComicList
+      :comicbooks="comicbooks"
+      @refresh="refreshComics" 
+    />
+    <CreateComic @refresh="refreshComics" />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ComicList from './components/ComicList.vue'
+import CreateComic from './components/CreateComic.vue'
+import './assets/styles.css'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    ComicList,
+    CreateComic
+  },
+  data(){
+    return {
+      comicbooks: []
+    }
+  },
+  async created () {
+    const response = await fetch('http://localhost:3000/comicbooks')
+    const data = await response.json()
+    console.log('ruby api data =>', data)
+    this.comicbooks = data
+  },
+  methods: {
+    async refreshComics(){
+      const response = await fetch('http://localhost:3000/comicbooks')
+      const data = await response.json()
+      console.log('ruby api data =>', data)
+      this.comicbooks = data 
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
